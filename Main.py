@@ -23,13 +23,14 @@ clock = pygame.time.Clock()
 # define destinations array
 xdestinations = []
 ydestinations = []
+zdestinations = []
 
 # set the solution object
 solution = False
 
 # define the Frame Per Seconds
 # for animations
-FPS = 40
+FPS = 80
 
 # Main entrance function
 def main():
@@ -50,14 +51,14 @@ def main():
         while True:
 
             # find the shorest path from the queue
-            solution = bfs.makechildren(bfs.queue[0][0], bfs.queue[0][1])
+            solution = bfs.makechildren(bfs.queue[0][0], bfs.queue[0][1], bfs.queue[0][2])
 
             # pop the left element in the queue
             bfs.pop_queue_left()
 
             # if the solution is found
             if solution == True:
-
+                print bfs.netlist_counter
                 # clear the queue if found
                 bfs.queue.clear()
 
