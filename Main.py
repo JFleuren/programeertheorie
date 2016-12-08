@@ -71,7 +71,7 @@ def main():
                 del bfs.explored[:]
 
                 # make the first childs from the start gate & add to the queue
-                bfs.makechildren(bfs.x[bfs.index_gate], bfs.y[bfs.index_gate])
+                bfs.next_solution()
 
                 #
                 solution = False

@@ -54,51 +54,53 @@ class Bfs_function:
         self.compass = []
 
         # gate positions
-        gates_x = [12,1,6,10,15,3,12,14,12,8,1,4,11,16,13,16,2,6,9,11,15,1,2,9,1]
-        gates_y = [11,1,1,1,1,2,2,2,3,4,5,5,5,5,7,7,8,8,8,8,8,9,10,10,11]
+        self.gates_x = [12,1,6,10,15,3,12,14,12,8,1,4,11,16,13,16,2,6,9,11,15,1,2,9,1]
+        self.gates_y = [11,1,1,1,1,2,2,2,3,4,5,5,5,5,7,7,8,8,8,8,8,9,10,10,11]
 
         # netlist start and end separately
         startcoordinates = [23,5,1,15,3,7,23,22,15,20,15,13,19,22,10,11,3,2,3,20,16,19,3,15,6,7,9,22,10]
-        endcoordinates = [4,7,0,21,5,13,8,13,17,10,8,18,2,11,4,24,15,20,4,19,9,5,0,5,14,9,13,16,7]
+        self.endcoordinates = [4,7,0,21,5,13,8,13,17,10,8,18,2,11,4,24,15,20,4,19,9,5,0,5,14,9,13,16,7]
 
         self.netlist_counter = len(startcoordinates)
 
         # loopt through all the assigned element in the list
         # and append all the (start & end) locations into the list
-        for i in range(0, len(gates_x)):
-                 self.explored.append((gates_x[i],gates_y[i]))
-                 self.board.set_value(GATE, gates_x[i], gates_y[i])
-                 self.compass.append((gates_x[i],gates_y[i]))
-                 self.x.append(gates_x[startcoordinates[i]])
-                 self.y.append(gates_y[startcoordinates[i]])
+        for i in range(0, len(self.gates_x)):
+                 self.explored.append((self.gates_x[i],self.gates_y[i]))
+                 self.board.set_value(GATE, self.gates_x[i], self.gates_y[i])
+                 self.compass.append((self.gates_x[i],self.gates_y[i]))
+                 self.x.append(self.gates_x[startcoordinates[i]])
+                 self.y.append(self.gates_y[startcoordinates[i]])
 
-                 self.x_destinations.append(gates_x[endcoordinates[i]])
-                 self.y_destinations.append(gates_y[endcoordinates[i]])
+                 self.x_destinations.append(self.gates_x[self.endcoordinates[i]])
+                 self.y_destinations.append(self.gates_y[self.endcoordinates[i]])
 
         # set the first startchilderen
         self.makechildren(self.x[self.index_gate], self.y[self.index_gate])
 
         # removed the end coordinates [x,y]
-        self.explored.pop(endcoordinates[self.index_gate])
+        self.explored.pop(self.endcoordinates[self.index_gate])
+
+    # 
+    def next_solution(self):
+        for i in range(0, len(self.gates_x)):
+            self.compass.append((self.gates_x[i],self.gates_y[i]))
+            self.explored.append((self.gates_x[i],self.gates_y[i]))
+                    # set the first startchilderen
+        for item in self.path:
+            self.explored.append(item)
+        self.makechildren(self.x[self.index_gate], self.y[self.index_gate])
+                    # removed the end coordinates [x,y]
+        self.explored.pop(self.endcoordinates[self.index_gate])
 
     # find and calculate the childeren
     def makechildren(self, x, y):
 
-        children = [(x-1, y, []),(x, y - 1, []),(x, y + 1, []),(x + 1, y, [])]
+        children = [(x-1, y, [WEST]),(x, y - 1, [SOUTH]),(x, y + 1, [NORTH]),(x + 1, y, [EAST])]
 
         for child in children:
             if child[0] >= 0 and child[1] >= 0 and child[0] <= board_size_width and child[1] <= board_size_height:
-                # print child
-                #print self.explored[-1]
                 if not (child[0], child[1]) in self.explored:
-                    if child[0] > x:
-                        child[2].append(EAST)
-                    elif child[0] < x:
-                        child[2].append(WEST)
-                    elif child[1] > y:
-                        child[2].append(NORTH)
-                    elif child[1] < y:
-                        child[2].append(SOUTH)
 
                     self.queue.append(child)
 
