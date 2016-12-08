@@ -94,7 +94,7 @@ class Bfs_function:
     def next_solution(self):
         for i in range(0, len(self.gates_x)):
             self.compass.append((self.gates_x[i],self.gates_y[i], self.gates_z[i]))
-            self.explored.append((self.gates_x[i],self.gates_y[i], self.gates_y[i]))
+            self.explored.append((self.gates_x[i],self.gates_y[i], self.gates_z[i]))
                     # set the first startchilderen
         for item in self.path:
             self.explored.append(item)

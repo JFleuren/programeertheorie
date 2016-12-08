@@ -30,7 +30,7 @@ solution = False
 
 # define the Frame Per Seconds
 # for animations
-FPS = 80
+FPS = 100
 
 # Main entrance function
 def main():
@@ -58,7 +58,6 @@ def main():
 
             # if the solution is found
             if solution == True:
-                print bfs.netlist_counter
                 # clear the queue if found
                 bfs.queue.clear()
 
