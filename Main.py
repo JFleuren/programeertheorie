@@ -43,11 +43,14 @@ def main():
     bfs = Bfs_function(board)
 
     # loop through the netlist until there are none
-    while bfs.netlist_counter >= 0:
-
+    while bfs.netlist_counter >= 1:
 
         # loop untill
         while True:
+            #
+            if (len(bfs.queue) == 0):
+                print "netlist counter: ", bfs.netlist_counter
+                bfs = Bfs_function(board)
 
             # find the shorest path from the queue
             solution = bfs.makechildren(bfs.queue[0][0], bfs.queue[0][1], bfs.queue[0][2])
@@ -60,16 +63,21 @@ def main():
                 # clear the queue if found
                 bfs.queue.clear()
 
+
                 # set decrease the netlist counter for the next bfs search
                 bfs.netlist_counter -= 1
-                print bfs.netlist_counter
-                #
+                # print "netlist counter: ", bfs.netlist_counter
+                if bfs.netlist_counter == 0:
+                    print "FINISHED BOARD!!!!!!!"
+                    break
                 bfs.index_gate += 1
+                # print bfs.index_gate
 
                 # delete the explored list
                 del bfs.explored[:]
 
                 # make the first childs from the start gate & add to the queue
+
                 bfs.next_solution()
 
                 #

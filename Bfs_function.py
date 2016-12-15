@@ -59,18 +59,22 @@ class Bfs_function:
         # self.startcoordinates = [13,19,23,5,1,15,3,7,3,23,22,15,20,15,22,10,11,3,2,3,20,16,19,3,15,6,7,9,22,10]
         # self.endcoordinates = [18,2,4,7,0,21,5,13,23,8,13,17,10,8,11,4,24,15,20,4,19,9,5,0,5,14,9,13,16,7]
 
-        self.netlist = [(23, 4), (5, 7), (1, 0), (15, 21), (3, 5), (7, 13), (3, 23), (23, 8), (22, 13), (15, 17), (20, 10), (15, 8), (13, 18), (19, 2), (22, 11), (10, 4), (11, 24), (3, 15), (2, 20), (3, 4), (20, 19), (16, 9), (19, 5), (3, 0), (15, 5), (6, 14), (7, 9), (9, 13), (22, 16), (10, 7)]
-        self.netlist_counter = 29
+        self.netlist = [(23, 8), (3, 15), (3, 0), (5, 7), (19, 2), (1, 0), (16, 9), (20, 19), (22, 16), (10, 4), (13, 18), (15, 21), (3, 4), (19, 5), (7, 9), (10, 7), (15, 5), (11, 24), (7, 13), (3, 5), (23, 4), (6, 14), (15, 17), (2, 20), (15, 8), (20, 10), (22, 11), (9, 13), (22, 13), (3, 23)]
+        random.shuffle(self.netlist)
+        self.netlist_counter = len(self.netlist)
+        # random.shuffle(self.netlist)
+        print self.netlist
         # loopt through all the assigned element in the list
         # and append all the (start & end) locations into the list
         for i in range(0, len(self.gates_x)):
                  self.board.set_value(GATE, self.gates_x[i], self.gates_y[i])
-                 self.x.append(self.gates_x[self.netlist[i][0]])
-                 self.y.append(self.gates_y[self.netlist[i][0]])
-                 self.z.append(self.gates_z[self.netlist[i][0]])
-                 self.x_destinations.append(self.gates_x[self.netlist[i][1]])
-                 self.y_destinations.append(self.gates_y[self.netlist[i][1]])
-                 self.z_destinations.append(self.gates_z[self.netlist[i][1]])
+        for i in range(len(self.netlist)):
+             self.x.append(self.gates_x[self.netlist[i][0]])
+             self.y.append(self.gates_y[self.netlist[i][0]])
+             self.z.append(self.gates_z[self.netlist[i][0]])
+             self.x_destinations.append(self.gates_x[self.netlist[i][1]])
+             self.y_destinations.append(self.gates_y[self.netlist[i][1]])
+             self.z_destinations.append(self.gates_z[self.netlist[i][1]])
         # set the first startchilderen
         self.next_solution()
 
@@ -97,10 +101,10 @@ class Bfs_function:
                 self.lookup_next((self.x[self.index_gate], self.y[self.index_gate],self.z[self.index_gate]), child)
 
                 solution = True
-                print solution
+
                 return solution
 
-            if child[0] >= 0 and child[1] >= 0 and child[2] >= 0 and child[0] <= board_size_width and child[1] <= board_size_height and child[2] <= board_size_depth:
+            if child[0] >= 0 and child[1] >= 0 and child[2] >= 0 and child[0] < board_size_width and child[1] < board_size_height and child[2] < board_size_depth:
                 if not (child[0], child[1], child[2]) in self.explored:
                     self.queue.append(child)
 
