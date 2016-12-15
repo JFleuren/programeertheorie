@@ -30,7 +30,7 @@ solution = False
 
 # define the Frame Per Seconds
 # for animations
-FPS = 100
+# FPS = 100
 
 # Main entrance function
 def main():
@@ -45,7 +45,6 @@ def main():
     # loop through the netlist until there are none
     while bfs.netlist_counter >= 0:
 
-        print bfs.netlist_counter
 
         # loop untill
         while True:
@@ -63,7 +62,7 @@ def main():
 
                 # set decrease the netlist counter for the next bfs search
                 bfs.netlist_counter -= 1
-
+                print bfs.netlist_counter
                 #
                 bfs.index_gate += 1
 
@@ -78,10 +77,10 @@ def main():
 
                 break
 
-            clock.tick(FPS)
-
-        board.clear_path()
-        board.add_start_end_gates((bfs.x[bfs.index_gate - 1], bfs.y[bfs.index_gate - 1]), (bfs.x_destinations[bfs.index_gate  - 1], bfs.y_destinations[bfs.index_gate - 1]))
-        board.print_board()
+            # clock.tick(FPS)
+        #
+        # board.clear_path()
+        # board.add_start_end_gates((bfs.x[bfs.index_gate - 1], bfs.y[bfs.index_gate - 1]), (bfs.x_destinations[bfs.index_gate  - 1], bfs.y_destinations[bfs.index_gate - 1]))
+        # board.print_board()
 
 main()

@@ -1,6 +1,6 @@
 from collections import deque
 from termcolor import colored
-
+import random
 # import classes
 from Node import Node
 
@@ -9,17 +9,6 @@ board_size_width = 18
 board_size_height = 13
 board_size_depth = 7
 
-# initialize expored array
-# explored = []
-# self.compass = []
-
-# define destinations array
-# x_destinations = []
-# y_destinations = []
-
-# set emty x and y coordinates
-# x = []
-# y = []
 
 # set the solution object
 solution = False
@@ -67,32 +56,27 @@ class Bfs_function:
         self.gates_y = [11,1,1,1,1,2,2,2,3,4,5,5,5,5,7,7,8,8,8,8,8,9,10,10,11]
         self.gates_z = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         # netlist start and end separately
-        self.startcoordinates = [23,5,1,15,3,7,23,22,15,20,15,13,19,22,10,11,3,2,3,20,16,19,3,15,6,7,9,22,10]
-        self.endcoordinates = [4,7,0,21,5,13,8,13,17,10,8,18,2,11,4,24,15,20,4,19,9,5,0,5,14,9,13,16,7]
+        # self.startcoordinates = [13,19,23,5,1,15,3,7,3,23,22,15,20,15,22,10,11,3,2,3,20,16,19,3,15,6,7,9,22,10]
+        # self.endcoordinates = [18,2,4,7,0,21,5,13,23,8,13,17,10,8,11,4,24,15,20,4,19,9,5,0,5,14,9,13,16,7]
 
-        self.netlist_counter = len(self.startcoordinates)
-
+        self.netlist = [(23, 4), (5, 7), (1, 0), (15, 21), (3, 5), (7, 13), (3, 23), (23, 8), (22, 13), (15, 17), (20, 10), (15, 8), (13, 18), (19, 2), (22, 11), (10, 4), (11, 24), (3, 15), (2, 20), (3, 4), (20, 19), (16, 9), (19, 5), (3, 0), (15, 5), (6, 14), (7, 9), (9, 13), (22, 16), (10, 7)]
+        self.netlist_counter = 29
         # loopt through all the assigned element in the list
         # and append all the (start & end) locations into the list
         for i in range(0, len(self.gates_x)):
-                 self.explored.append((self.gates_x[i],self.gates_y[i],self.gates_z[i]))
                  self.board.set_value(GATE, self.gates_x[i], self.gates_y[i])
-                 self.compass.append((self.gates_x[i],self.gates_y[i],self.gates_z[i]))
-                 self.x.append(self.gates_x[self.startcoordinates[i]])
-                 self.y.append(self.gates_y[self.startcoordinates[i]])
-                 self.z.append(self.gates_z[self.startcoordinates[i]])
-                 self.x_destinations.append(self.gates_x[self.endcoordinates[i]])
-                 self.y_destinations.append(self.gates_y[self.endcoordinates[i]])
-                 self.z_destinations.append(self.gates_z[self.endcoordinates[i]])
+                 self.x.append(self.gates_x[self.netlist[i][0]])
+                 self.y.append(self.gates_y[self.netlist[i][0]])
+                 self.z.append(self.gates_z[self.netlist[i][0]])
+                 self.x_destinations.append(self.gates_x[self.netlist[i][1]])
+                 self.y_destinations.append(self.gates_y[self.netlist[i][1]])
+                 self.z_destinations.append(self.gates_z[self.netlist[i][1]])
         # set the first startchilderen
-        self.makechildren(self.x[self.index_gate], self.y[self.index_gate],self.z[self.index_gate])
-
-        # removed the end coordinates [x,y]
-        self.explored.pop(self.endcoordinates[self.index_gate])
+        self.next_solution()
 
     #
     def next_solution(self):
-        for i in range(0, len(self.gates_x)):
+        for i in range(len(self.gates_x)):
             self.compass.append((self.gates_x[i],self.gates_y[i], self.gates_z[i]))
             self.explored.append((self.gates_x[i],self.gates_y[i], self.gates_z[i]))
                     # set the first startchilderen
@@ -100,7 +84,6 @@ class Bfs_function:
             self.explored.append(item)
         self.makechildren(self.x[self.index_gate], self.y[self.index_gate],self.z[self.index_gate])
                     # removed the end coordinates [x,y]
-        self.explored.pop(self.endcoordinates[self.index_gate])
 
     # find and calculate the childeren
     def makechildren(self, x, y, z):
@@ -108,34 +91,37 @@ class Bfs_function:
         children = [(x - 1, y, z, [WEST]), (x, y - 1, z, [SOUTH]), (x, y + 1, z,[NORTH]), (x + 1, y, z, [EAST]), (x , y, z + 1, [UP]), (x , y, z - 1, [DOWN])]
 
         for child in children:
+            # print child
+            if child[0] == self.x_destinations[self.index_gate] and child[1] == self.y_destinations[self.index_gate] and child[2] == self.z_destinations[self.index_gate]:
+
+                self.lookup_next((self.x[self.index_gate], self.y[self.index_gate],self.z[self.index_gate]), child)
+
+                solution = True
+                print solution
+                return solution
+
             if child[0] >= 0 and child[1] >= 0 and child[2] >= 0 and child[0] <= board_size_width and child[1] <= board_size_height and child[2] <= board_size_depth:
                 if not (child[0], child[1], child[2]) in self.explored:
-
                     self.queue.append(child)
 
                     self.explored.append((child[0], child[1],child[2]))
                     self.compass.append(child)
+                # else:
+                #     print child[0], child[1], child[2], "blocked"
 
-                    self.print_child_state(child)
+                    # self.print_child_state(child)
 
-        if child[0] == self.x_destinations[self.index_gate] and child[1] == self.y_destinations[self.index_gate] and child[2] == self.z_destinations[self.index_gate]:
 
-            self.lookup_next((self.x[self.index_gate], self.y[self.index_gate],self.z[self.index_gate]), child)
 
-            solution = True
-            return solution
-        else:
-            solution = False
-            return solution
 
     #
     def pop_queue_left(self):
         self.queue.popleft()
 
     #
-    def print_child_state(self, child):
-        self.board.set_value(CURSOR, child[0], child[1])
-        self.board.print_board()
+    # def print_child_state(self, child):
+    #     self.board.set_value(CURSOR, child[0], child[1])
+    #     self.board.print_board()
 
     #
     def get_start_gate(self):
